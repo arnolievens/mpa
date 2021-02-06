@@ -96,14 +96,18 @@ async function getAlbumArt() {
   }
 
   const song = await client.api.status.currentsong();
-
   if (!song) {
     console.log("there is no song playing");
     await client.disconnect();
     return;
   }
 
-  const data = await client.api.db.albumartWhole(song.file);
+  var data;
+  try {
+    data = await client.api.db.albumartWhole(song.file);
+  } catch {
+    if (!silent) console.log("invalid image");
+  }
 
   if (!data) {
     if (!silent) console.log("image not found, revert to " + fallback);
