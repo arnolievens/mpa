@@ -1,2 +1,5 @@
 cover.jpg
 barbapapa.jpg
+node_modules/
+package-lock.json
+package.json
