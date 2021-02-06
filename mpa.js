@@ -1,7 +1,8 @@
+#!/bin/env node
+
 // -----------------------------mpd albumart program---------------------------
 
 const mpdapi = require("mpd-api");
-const { cmd } = mpdapi;
 
 const fs = require("fs");
 
@@ -13,7 +14,7 @@ const config = {
 };
 
 var path = __dirname + "/cover.jpg";
-var verbose;
+var verbose = false;
 var fallback = __dirname + "/barbapapa.jpg";
 
 // environment variables
