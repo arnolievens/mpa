@@ -94,7 +94,7 @@ async function getAlbumArt() {
         if (!silent) console.log("connected to "
             + config.host + " at port " + config.port);
     } catch {
-        console.err("failed to connect to " 
+        console.error("failed to connect to " 
             + config.host + " at port " + config.port);
         return;
     }
@@ -104,23 +104,24 @@ async function getAlbumArt() {
         song = await client.api.status.currentsong();
         if (verbose) console.log(song);
     } catch {
-        console.err("failed to request current song");
+        console.error("failed to request current song");
         await client.disconnect();
         return;
     }
 
     if (!song) {
-        console.err("there is no song playing");
+        console.error("there is no song playing");
         await client.disconnect();
         return;
     }
-
+    
     // fetch album art for song
     try {
         data = await client.api.db.albumartWhole(song.file);
-        if (verbose) console.log("fetching albumart for current song");
+        if (verbose) console.log("fetched albumart for current song");
     } catch {
-        console.err("invalid image");
+        console.error("invalid image");
+        await client.disconnect();
     }
 
     // revert to fallback image
@@ -130,17 +131,15 @@ async function getAlbumArt() {
         try {
             fs.createReadStream(fallback).pipe(fs.createWriteStream(path));
         } catch {
-            console.err("fallback image not found at " + fallback);
+            console.error("fallback image not found at " + fallback);
         }
-
-        await client.disconnect();
         return;
     }
 
     // write to file
     fs.writeFile(path, data.buffer, "binary", function (err) {
         if (err) {
-            return console.err(err);
+            return console.error(err);
         }
         if (!silent) {
             console.log("saved image to " + path);
